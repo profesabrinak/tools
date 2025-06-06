@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Función Coseno - Clase Avanzada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .circle-section, .graph-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .visualization {
+            width: 100%;
+            height: 400px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .controls-section {
+            grid-column: 1 / -1;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .parameter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .control-group {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .control-group h4 {
+            margin-bottom: 10px;
+            color: #ff6b6b;
+        }
+        
+        .slider-container {
+            margin: 10px 0;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.3);
+            outline: none;
+            margin: 10px 0;
+        }
+        
+        .function-display {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .theory-section {
+            grid-column: 1 / -1;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .concept-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid #51cf66;
+        }
+        
+        .concept-card h4 {
+            color: #51cf66;
+            margin-bottom: 10px;
+        }
+        
+        .examples-section {
+            grid-column: 1 / -1;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .example-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #4ecdc4;
+        }
+        
+        .highlight {
+            background: rgba(255,255,0,0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .reset-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .value-display {
+            color: #ffd93d;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Función Coseno: Análisis Completo</h1>
+		<h2>Creado por: Profe Sabrina Klimczuk.</h2>
+		<h2>Youtube: @sabrinaklimczuk7258.</h2>
+            <p>Del círculo unitario a las transformaciones matemáticas</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="circle-section">
+                <h2>🔵 Círculo Unitario Generador</h2>
+                <svg class="visualization" viewBox="-200 -150 400 300" id="circleViz">
+                    <!-- Ejes -->
+                    <line x1="-180" y1="0" x2="180" y2="0" stroke="white" stroke-width="1" opacity="0.5"/>
+                    <line x1="0" y1="-130" x2="0" y2="130" stroke="white" stroke-width="1" opacity="0.5"/>
+                    
+                    <!-- Círculo unitario -->
+                    <circle cx="0" cy="0" r="100" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
+                    
+                    <!-- Punto en movimiento -->
+                    <circle id="movingPoint" cx="100" cy="0" r="5" fill="#ff6b6b"/>
+                    
+                    <!-- Radio -->
+                    <line id="radius" x1="0" y1="0" x2="100" y2="0" stroke="white" stroke-width="2"/>
+                    
+                    <!-- Proyección coseno -->
+                    <line id="cosProjection" x1="100" y1="0" x2="100" y2="0" stroke="#51cf66" stroke-width="3"/>
+                    
+                    <!-- Ángulo -->
+                    <path id="angleArc" d="" fill="rgba(255,255,255,0.3)" stroke="white"/>
+                    
+                    <!-- Etiquetas -->
+                    <text x="105" y="5" fill="white" font-size="12">cos θ</text>
+                    <text x="5" y="-105" fill="white" font-size="12">sen θ</text>
+                </svg>
+                
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="reset-btn" onclick="toggleAnimation()">▶️ Iniciar/Pausar</button>
+                    <button class="reset-btn" onclick="resetAnimation()">🔄 Reiniciar</button>
+                </div>
+            </div>
+            
+            <div class="graph-section">
+                <h2>📈 Gráfica de la Función Coseno</h2>
+                <svg class="visualization" viewBox="-20 -150 400 300" id="graphViz">
+                    <!-- Ejes -->
+                    <line x1="0" y1="0" x2="360" y2="0" stroke="white" stroke-width="1"/>
+                    <line x1="0" y1="-120" x2="0" y2="120" stroke="white" stroke-width="1"/>
+                    
+                    <!-- Marcas del eje X -->
+                    <text x="90" y="15" fill="white" font-size="10">π/2</text>
+                    <text x="180" y="15" fill="white" font-size="10">π</text>
+                    <text x="270" y="15" fill="white" font-size="10">3π/2</text>
+                    <text x="360" y="15" fill="white" font-size="10">2π</text>
+                    
+                    <!-- Gráfica del coseno -->
+                    <path id="cosineCurve" d="" stroke="#51cf66" stroke-width="3" fill="none"/>
+                    
+                    <!-- Punto que se mueve en la gráfica -->
+                    <circle id="graphPoint" cx="0" cy="0" r="4" fill="#ff6b6b"/>
+                    
+                    <!-- Línea vertical conectora -->
+                    <line id="connector" x1="0" y1="0" x2="0" y2="0" stroke="#ffd93d" stroke-width="2" stroke-dasharray="5,5"/>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="function-display" id="functionDisplay">
+            f(x) = A·cos(B·x + C) + D
+        </div>
+        
+        <div class="controls-section">
+            <h2>🎛️ Control de Parámetros</h2>
+            <div class="parameter-controls">
+                <div class="control-group">
+                    <h4>📏 Amplitud (A)</h4>
+                    <input type="range" class="slider" id="amplitudeSlider" min="0.5" max="3" step="0.1" value="1">
+                    <p>Valor: <span class="value-display" id="amplitudeValue">1</span></p>
+                    <p><small>Controla la altura máxima de la función</small></p>
+                </div>
+                
+                <div class="control-group">
+                    <h4>🌊 Frecuencia (B)</h4>
+                    <input type="range" class="slider" id="frequencySlider" min="0.5" max="3" step="0.1" value="1">
+                    <p>Valor: <span class="value-display" id="frequencyValue">1</span></p>
+                    <p><small>Controla cuántos ciclos hay en 2π</small></p>
+                </div>
+                
+                <div class="control-group">
+                    <h4>↔️ Desfase (C)</h4>
+                    <input type="range" class="slider" id="phaseSlider" min="-3.14" max="3.14" step="0.1" value="0">
+                    <p>Valor: <span class="value-display" id="phaseValue">0</span></p>
+                    <p><small>Desplazamiento horizontal</small></p>
+                </div>
+                
+                <div class="control-group">
+                    <h4>↕️ Desplazamiento Vertical (D)</h4>
+                    <input type="range" class="slider" id="verticalSlider" min="-2" max="2" step="0.1" value="0">
+                    <p>Valor: <span class="value-display" id="verticalValue">0</span></p>
+                    <p><small>Mueve la función arriba/abajo</small></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="theory-section">
+            <h2>📚 Conceptos Fundamentales</h2>
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h4>📏 AMPLITUD (A)</h4>
+                    <p><strong>Definición:</strong> La distancia desde el eje central hasta el valor máximo (o mínimo).</p>
+                    <p><strong>Fórmula:</strong> |A|</p>
+                    <p><strong>Efecto:</strong> Si A > 1, la función se "estira" verticalmente. Si 0 < A < 1, se "comprime".</p>
+                    <p><strong>Ejemplo:</strong> cos(x) tiene amplitud 1, pero 3cos(x) tiene amplitud 3.</p>
+                </div>
+                
+                <div class="concept-card">
+                    <h4>⏱️ PERÍODO (T)</h4>
+                    <p><strong>Definición:</strong> La distancia horizontal para completar un ciclo completo.</p>
+                    <p><strong>Fórmula:</strong> T = 2π/|B|</p>
+                    <p><strong>Función básica:</strong> cos(x) tiene período 2π</p>
+                    <p><strong>Ejemplo:</strong> cos(2x) tiene período π (ciclo más rápido)</p>
+                </div>
+                
+                <div class="concept-card">
+                    <h4>🌊 FRECUENCIA (f)</h4>
+                    <p><strong>Definición:</strong> Número de ciclos completos en un intervalo de 2π.</p>
+                    <p><strong>Relación:</strong> f = 1/T = |B|/2π</p>
+                    <p><strong>Parámetro B:</strong> Controla qué tan "rápido" oscila la función</p>
+                    <p><strong>Ejemplo:</strong> cos(3x) tiene 3 ciclos en 2π</p>
+                </div>
+                
+                <div class="concept-card">
+                    <h4>↔️ DESFASE/FASE (φ)</h4>
+                    <p><strong>Definición:</strong> Desplazamiento horizontal de la función.</p>
+                    <p><strong>Fórmula:</strong> φ = -C/B</p>
+                    <p><strong>Dirección:</strong> C > 0 → izquierda, C < 0 → derecha</p>
+                    <p><strong>Ejemplo:</strong> cos(x + π/2) = -sen(x)</p>
+                </div>
+                
+                <div class="concept-card">
+                    <h4>↕️ DESPLAZAMIENTO VERTICAL</h4>
+                    <p><strong>Definición:</strong> Mueve toda la función arriba o abajo.</p>
+                    <p><strong>Efecto:</strong> Cambia la línea de equilibrio</p>
+                    <p><strong>Rango:</strong> [D-A, D+A] en lugar de [-A, A]</p>
+                    <p><strong>Ejemplo:</strong> cos(x) + 2 oscila entre 1 y 3</p>
+                </div>
+                
+                <div class="concept-card">
+                    <h4>🔄 FORMA GENERAL</h4>
+                    <p><strong>Ecuación:</strong> <span class="highlight">f(x) = A·cos(B·x + C) + D</span></p>
+                    <p><strong>Dominio:</strong> ℝ (todos los reales)</p>
+                    <p><strong>Rango:</strong> [D-|A|, D+|A|]</p>
+                    <p><strong>Puntos clave:</strong> Máximos, mínimos, cruces por cero</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="examples-section">
+            <h2>💡 Ejemplos Resueltos</h2>
+            
+            <div class="example-card">
+                <h4>📝 Ejemplo 1: f(x) = 2cos(3x)</h4>
+                <p><strong>Amplitud:</strong> |2| = 2</p>
+                <p><strong>Período:</strong> T = 2π/3</p>
+                <p><strong>Frecuencia:</strong> f = 3/2π</p>
+                <p><strong>Interpretación:</strong> La función oscila entre -2 y 2, completando 3 ciclos en 2π.</p>
+            </div>
+            
+            <div class="example-card">
+                <h4>📝 Ejemplo 2: f(x) = -cos(x - π/4) + 1</h4>
+                <p><strong>Amplitud:</strong> |-1| = 1</p>
+                <p><strong>Período:</strong> T = 2π</p>
+                <p><strong>Desfase:</strong> φ = π/4 (derecha)</p>
+                <p><strong>Despl. vertical:</strong> D = 1</p>
+                <p><strong>Reflexión:</strong> El signo negativo invierte la función</p>
+            </div>
+            
+            <div class="example-card">
+                <h4>📝 Ejemplo 3: f(x) = 0.5cos(2x + π) - 1</h4>
+                <p><strong>Amplitud:</strong> 0.5</p>
+                <p><strong>Período:</strong> T = π</p>
+                <p><strong>Desfase:</strong> φ = -π/2 (izquierda)</p>
+                <p><strong>Rango:</strong> [-1.5, -0.5]</p>
+                <p><strong>Nota:</strong> cos(x + π) = -cos(x)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let animationId;
+        let isAnimating = false;
+        let angle = 0;
+        
+        // Parámetros de la función
+        let A = 1; // Amplitud
+        let B = 1; // Frecuencia
+        let C = 0; // Desfase
+        let D = 0; // Desplazamiento vertical
+        
+        // Referencias a elementos
+        const amplitudeSlider = document.getElementById('amplitudeSlider');
+        const frequencySlider = document.getElementById('frequencySlider');
+        const phaseSlider = document.getElementById('phaseSlider');
+        const verticalSlider = document.getElementById('verticalSlider');
+        
+        const amplitudeValue = document.getElementById('amplitudeValue');
+        const frequencyValue = document.getElementById('frequencyValue');
+        const phaseValue = document.getElementById('phaseValue');
+        const verticalValue = document.getElementById('verticalValue');
+        
+        const functionDisplay = document.getElementById('functionDisplay');
+        
+        // Event listeners para los sliders
+        amplitudeSlider.addEventListener('input', updateParameters);
+        frequencySlider.addEventListener('input', updateParameters);
+        phaseSlider.addEventListener('input', updateParameters);
+        verticalSlider.addEventListener('input', updateParameters);
+        
+        function updateParameters() {
+            A = parseFloat(amplitudeSlider.value);
+            B = parseFloat(frequencySlider.value);
+            C = parseFloat(phaseSlider.value);
+            D = parseFloat(verticalSlider.value);
+            
+            amplitudeValue.textContent = A.toFixed(1);
+            frequencyValue.textContent = B.toFixed(1);
+            phaseValue.textContent = C.toFixed(1);
+            verticalValue.textContent = D.toFixed(1);
+            
+            updateFunctionDisplay();
+            drawCosineGraph();
+        }
+        
+        function updateFunctionDisplay() {
+            let funcText = "f(x) = ";
+            
+            // Amplitud
+            if (A !== 1) {
+                funcText += A.toFixed(1);
+            }
+            
+            funcText += "cos(";
+            
+            // Frecuencia
+            if (B !== 1) {
+                funcText += B.toFixed(1);
+            }
+            funcText += "x";
+            
+            // Desfase
+            if (C !== 0) {
+                funcText += C > 0 ? " + " + C.toFixed(1) : " - " + Math.abs(C).toFixed(1);
+            }
+            
+            funcText += ")";
+            
+            // Desplazamiento vertical
+            if (D !== 0) {
+                funcText += D > 0 ? " + " + D.toFixed(1) : " - " + Math.abs(D).toFixed(1);
+            }
+            
+            functionDisplay.textContent = funcText;
+        }
+        
+        function drawCosineGraph() {
+            const path = document.getElementById('cosineCurve');
+            let pathData = "";
+            
+            for (let x = 0; x <= 360; x += 1) {
+                const radians = (x * Math.PI) / 180;
+                const y = A * Math.cos(B * radians + C) + D;
+                const scaledY = -y * 50; // Escalar y invertir para SVG
+                
+                if (x === 0) {
+                    pathData += `M ${x} ${scaledY}`;
+                } else {
+                    pathData += ` L ${x} ${scaledY}`;
+                }
+            }
+            
+            path.setAttribute('d', pathData);
+        }
+        
+        function updateCircleAndGraph() {
+            const x = 100 * Math.cos(angle);
+            const y = -100 * Math.sin(angle); // Negativo para SVG
+            
+            // Actualizar punto en el círculo
+            const movingPoint = document.getElementById('movingPoint');
+            movingPoint.setAttribute('cx', x);
+            movingPoint.setAttribute('cy', y);
+            
+            // Actualizar radio
+            const radius = document.getElementById('radius');
+            radius.setAttribute('x2', x);
+            radius.setAttribute('y2', y);
+            
+            // Actualizar proyección coseno
+            const cosProjection = document.getElementById('cosProjection');
+            cosProjection.setAttribute('x1', x);
+            cosProjection.setAttribute('y1', 0);
+            cosProjection.setAttribute('x2', x);
+            cosProjection.setAttribute('y2', y);
+            
+            // Actualizar arco del ángulo
+            const angleArc = document.getElementById('angleArc');
+            const endX = 30 * Math.cos(angle);
+            const endY = -30 * Math.sin(angle);
+            const largeArcFlag = angle > Math.PI ? 1 : 0;
+            const arcPath = `M 30 0 A 30 30 0 ${largeArcFlag} 0 ${endX} ${endY} L 0 0 Z`;
+            angleArc.setAttribute('d', arcPath);
+            
+            // Actualizar punto en la gráfica
+            const graphPoint = document.getElementById('graphPoint');
+            const graphX = (angle * 180) / Math.PI;
+            const cosValue = A * Math.cos(B * angle + C) + D;
+            const graphY = -cosValue * 50;
+            
+            graphPoint.setAttribute('cx', graphX);
+            graphPoint.setAttribute('cy', graphY);
+            
+            // Actualizar línea conectora
+            const connector = document.getElementById('connector');
+            connector.setAttribute('x1', graphX);
+            connector.setAttribute('y1', 0);
+            connector.setAttribute('x2', graphX);
+            connector.setAttribute('y2', graphY);
+        }
+        
+        function animate() {
+            if (!isAnimating) return;
+            
+            updateCircleAndGraph();
+            angle += 0.02;
+            
+            if (angle >= 2 * Math.PI) {
+                angle = 0;
+            }
+            
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        function toggleAnimation() {
+            isAnimating = !isAnimating;
+            if (isAnimating) {
+                animate();
+            } else {
+                cancelAnimationFrame(animationId);
+            }
+        }
+        
+        function resetAnimation() {
+            angle = 0;
+            updateCircleAndGraph();
+        }
+        
+        // Inicialización
+        updateParameters();
+        drawCosineGraph();
+        updateCircleAndGraph();
+        
+        // Iniciar animación automáticamente
+        setTimeout(() => {
+            toggleAnimation();
+        }, 1000);
+    </script>
+</body>
+</html>
